@@ -11,11 +11,10 @@ class CreateSleepRecords < ActiveRecord::Migration[8.0]
     end
     
     # Business logic constraint - only one sleeping record per user
-    add_index :sleep_records, :user_id, unique: true, where: "status = 0"
+    add_index :sleep_records, [:user_id, :status], unique: true, where: "status = 0"
     
     # Performance indexes for common queries
     add_index :sleep_records, [:user_id, :created_at]
-    add_index :sleep_records, [:user_id, :status]
     add_index :sleep_records, [:duration, :id], order: { duration: :desc, id: :desc }
     add_index :sleep_records, :created_at
     add_index :sleep_records, [:status, :clock_in_time]

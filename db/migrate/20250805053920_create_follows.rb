@@ -9,9 +9,5 @@ class CreateFollows < ActiveRecord::Migration[8.0]
     
     # Prevent duplicate follows and enable fast lookups
     add_index :follows, [:follower_id, :followee_id], unique: true
-    
-    # Performance indexes for common queries
-    add_index :follows, :follower_id  # Get who user follows
-    add_index :follows, :followee_id  # Get user's followers
   end
 end
