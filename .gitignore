@@ -7,8 +7,13 @@
 # Ignore bundler config.
 /.bundle
 
-# Ignore all environment files.
-/.env*
+# Ignore all environment files (but keep examples)
+/.env
+/.env.local
+/.env.*.local
+/.env.development
+/.env.test
+/.env.production
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -30,3 +35,7 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# Ignore all database configurations (keep only example)
+/config/database.yml
+/config/database.production.yml

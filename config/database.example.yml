@@ -1,0 +1,17 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
+  username: <%= ENV.fetch("DB_USERNAME") %>
+  password: <%= ENV.fetch("DB_PASSWORD") %>
+
+development:
+  <<: *default
+  database: <%= ENV.fetch("DB_NAME") { "sleep_tracker_api_development" } %>
+
+test:
+  <<: *default
+  database: <%= ENV.fetch("DB_NAME") { "sleep_tracker_api_test" } %>
+
+# Production config is in database.production.yml
