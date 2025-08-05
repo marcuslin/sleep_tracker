@@ -1,5 +1,5 @@
 class SleepRecord < ApplicationRecord
   belongs_to :user
 
-  enum status: { sleeping: 0, awake: 1 }
+  enum :status, { sleeping: 0, awake: 1 }
 end
