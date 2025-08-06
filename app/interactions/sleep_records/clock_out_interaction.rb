@@ -16,15 +16,15 @@ class SleepRecords::ClockOutInteraction < ActiveInteraction::Base
 
     sleep_record
   end
-  
+
   private
 
   def sleeping_record_exists?
     unless sleep_record
       errors.add(:base, I18n.t("interactions.sleep_records.clock_out.no_sleeping_record"))
     end
-    
-    return !sleep_record.nil?
+
+    !sleep_record.nil?
   end
 
   def calculate_duration(clock_out_time)
@@ -32,6 +32,6 @@ class SleepRecords::ClockOutInteraction < ActiveInteraction::Base
   end
 
   def sleep_record
-    @sleep_record ||= user.sleep_records.sleeping.first 
+    @sleep_record ||= user.sleep_records.sleeping.first
   end
 end

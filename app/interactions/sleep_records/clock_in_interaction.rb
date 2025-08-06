@@ -14,7 +14,7 @@ class SleepRecords::ClockInInteraction < ActiveInteraction::Base
 
   def sleeping_record_exists
     if user.sleep_records.sleeping.exists?
-      errors.add(:base, I18n.t("interactions.sleep_records.clock_in.already_sleeping"))  
+      errors.add(:base, I18n.t("interactions.sleep_records.clock_in.already_sleeping"))
     end
   end
 end
