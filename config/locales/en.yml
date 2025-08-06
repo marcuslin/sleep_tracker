@@ -28,4 +28,13 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  interactions:
+    sleep_records:
+      clock_in:
+        already_sleeping: "User already has an active sleeping session"
+      clock_out:
+        no_sleeping_record: "No active sleep session found"
+    follows:
+      follow_user:
+        cannot_follow_self: "You cannot follow yourself"
+
