@@ -49,6 +49,7 @@ group :development, :test do
   gem "pry-rails"
   gem "pry-byebug"
   gem "awesome_print"
+  gem "faker"
 end
 
 group :development do
@@ -66,5 +67,4 @@ group :test do
   # Test-specific gems
   gem "factory_bot_rails"
   gem "shoulda-matchers"
-  gem "faker"
 end
