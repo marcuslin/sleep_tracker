@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       post "auth/login", to: "auth#login"
 
       post "sleep_records/clock_in", to: "sleep_records#clock_in"
+      post "sleep_records/clock_out", to: "sleep_records#clock_out"
     end
   end
 end

@@ -2,7 +2,7 @@ class SleepRecords::ClockOutInteraction < ActiveInteraction::Base
   object :user
 
   def execute
-    return sleep_record unless sleeping_record_exists?
+    return unless sleeping_record_exists?
 
     clock_out_time = Time.current
     duration = calculate_duration(clock_out_time)

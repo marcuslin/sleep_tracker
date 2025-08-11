@@ -79,4 +79,61 @@ RSpec.describe Api::V1::SleepRecordsController, type: :controller do
       end
     end
   end
+
+  describe 'POST #clock_out' do
+    before { request.headers.merge!(valid_headers) }
+
+    context 'when user has no active sleep record' do
+      it 'returns unprocessable entity status' do
+        post :clock_out
+
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'returns success false in response' do
+        post :clock_out
+
+        expect(json_response['success']).to be false
+      end
+
+      it 'includes error message' do
+        post :clock_out
+
+        expect(json_response['error']['message']).to be_present
+        expect(json_response['error']['message']).to eq(I18n.t("interactions.sleep_records.clock_out.no_sleeping_record"))
+      end
+    end
+
+    context 'when user has active sleep record' do
+      let!(:sleep_record) { create(:sleep_record, user: user, status: :sleeping) }
+
+      it 'returns success true' do
+        post :clock_out
+
+        expect(json_response['success']).to be true
+      end
+
+      it 'returns updated sleep record' do
+        post :clock_out
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response['data']['sleep_record']).to be_present
+      end
+
+      it 'sets clock_out_time and duration on the sleep record' do
+        post :clock_out
+
+        sleep_record.reload
+
+        expect(sleep_record.clock_out_time).to be_present
+        expect(sleep_record.duration).to be > 0
+      end
+
+      it 'updates sleep record status from sleeping to awake' do
+        expect {
+          post :clock_out
+        }.to change { sleep_record.reload.status }.from('sleeping').to('awake')
+      end
+    end
+  end
 end

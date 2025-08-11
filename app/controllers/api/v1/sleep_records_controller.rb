@@ -29,5 +29,22 @@ class Api::V1::SleepRecordsController < ApplicationController
   end
 
   def clock_out
+    interaction = SleepRecords::ClockOutInteraction.run(user: current_user)
+
+    if interaction.valid?
+      render json: {
+        success: true,
+        data: {
+          sleep_record: interaction.result
+        }
+      }, status: :ok
+    else
+      render json: {
+        success: false,
+        error: {
+          message: interaction.errors.full_messages.join(", ")
+        }
+      }, status: :unprocessable_entity
+    end
   end
 end
