@@ -5,6 +5,44 @@ RSpec.describe Api::V1::SleepRecordsController, type: :controller do
   let(:token) { Auth::JwtService.encode(user_id: user.id) }
   let(:valid_headers) { { 'Authorization' => "Bearer #{token}" } }
 
+  describe 'GET #index' do
+    before { request.headers.merge!(valid_headers) }
+
+    context 'when user has no sleep records' do
+      it 'returns empty data array' do
+        get :index
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response['success']).to be true
+        expect(json_response['data']).to eq([])
+        expect(json_response['meta']['next_cursor']).to be_nil
+      end
+    end
+
+    context 'when user has sleep records' do
+      let!(:records) { create_list(:sleep_record, 5, user: user, status: :awake) }
+
+      it 'returns sleep records in descending order' do
+        get :index
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response['success']).to be true
+        expect(json_response['data'].size).to eq(5)
+        expect(json_response['meta']['next_cursor']).to be_nil
+      end
+
+      context 'with pagination' do
+        let!(:records) { create_list(:sleep_record, 25, user: user, status: :awake) }
+
+        it 'respects limit parameter and shows next_cursor when more pages exist' do
+          get :index, params: { limit: 10 }
+
+          expect(json_response['data'].size).to eq(10)
+          expect(json_response['meta']['next_cursor']).to be_present
+        end
+      end
+    end
+  end
   describe 'POST #clock_in' do
     before { request.headers.merge!(valid_headers) }
 
