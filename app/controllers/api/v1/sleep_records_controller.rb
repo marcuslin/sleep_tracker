@@ -1,9 +1,23 @@
 class Api::V1::SleepRecordsController < ApplicationController
-  # TODO
-  # add index with cursor-based pagination in order to cover
-  # the missing requirement of returning all sleep records
-  # while clocking in, considering users may have alot of
-  # sleep records returning them all in an API response is not ideal.
+  def index
+    pagination_service = PaginationService.new(
+      current_user.sleep_records,
+      params[:cursor],
+      :created_at,
+      :desc,
+      params[:limit]
+    )
+
+    result = pagination_service.call
+
+    render json: {
+      success: true,
+      data: result[:records],
+      meta: {
+        next_cursor: result[:next_cursor]
+      }
+    }
+  end
 
   def clock_in
     interaction = SleepRecords::ClockInInteraction.run(user: current_user)
