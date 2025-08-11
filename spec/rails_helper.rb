@@ -25,6 +25,10 @@ RSpec.configure do |config|
 
   # Filter Rails backtrace
   config.filter_rails_from_backtrace!
+
+  def json_response
+    JSON.parse(response.body)
+  end
 end
 
 # Shoulda Matchers configuration
