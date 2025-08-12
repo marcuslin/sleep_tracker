@@ -17,6 +17,11 @@ class Api::V1::SleepRecordsController < ApplicationController
         next_cursor: result[:next_cursor]
       }
     }
+  rescue ArgumentError => e
+    render json: {
+      success: false,
+      error: { message: e.message }
+    }, status: :bad_request
   end
 
   def clock_in
@@ -82,6 +87,11 @@ class Api::V1::SleepRecordsController < ApplicationController
         next_cursor: paginated_records[:next_cursor]
       }
     }
+  rescue ArgumentError => e
+    render json: {
+      success: false,
+      error: { message: e.message }
+    }, status: :bad_request
   end
 
   private
