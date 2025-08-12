@@ -61,4 +61,41 @@ class Api::V1::SleepRecordsController < ApplicationController
       }, status: :unprocessable_entity
     end
   end
+
+  def friends_weekly
+    friend_ids = current_user.followees.pluck(:id)
+    friends_records = SleepRecord.where(user_id: friend_ids)
+                                 .where(created_at: last_week_range)
+                                 .where.not(duration: nil)
+                                 .includes(:user)
+
+    paginated_records = PaginationService.new(
+      friends_records,
+      params[:cursor],
+      :duration,
+      :desc,
+      params[:limit]
+    ).call
+
+    render json: {
+      success: true,
+      data: serialize(paginated_records[:records]),
+      meta: {
+        next_cursor: paginated_records[:next_cursor]
+      }
+    }
+  end
+
+  private
+
+  def last_week_range
+    last_week_start = Date.current.beginning_of_week.prev_week
+    last_week_end = last_week_start.end_of_week
+
+    last_week_start..last_week_end
+  end
+
+  def serialize(sleep_records)
+    sleep_records.map { |record| SleepRecordSerializer.serialize(record) }
+  end
 end
