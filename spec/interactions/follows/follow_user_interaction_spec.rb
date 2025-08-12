@@ -23,7 +23,7 @@ RSpec.describe Follows::FollowUserInteraction do
         interaction = described_class.run(user: user, followee_id: 99999)
 
         expect(interaction).to be_invalid
-        expect(interaction.errors[:followee_id]).to include('Followee not found')
+        expect(interaction.errors.full_messages).to include('Followee not found')
       end
     end
 
@@ -32,7 +32,7 @@ RSpec.describe Follows::FollowUserInteraction do
         interaction = described_class.run(user: user, followee_id: user.id)
 
         expect(interaction).to be_invalid
-        expect(interaction.errors[:followee_id]).to include('You cannot follow yourself')
+        expect(interaction.errors.full_messages).to include('You cannot follow yourself')
       end
     end
 
@@ -43,7 +43,7 @@ RSpec.describe Follows::FollowUserInteraction do
         interaction = described_class.run(user: user, followee_id: followee.id)
 
         expect(interaction).to be_invalid
-        expect(interaction.errors[:followee_id]).to include('You are already following this user')
+        expect(interaction.errors.full_messages).to include('You are already following this user')
       end
     end
   end
