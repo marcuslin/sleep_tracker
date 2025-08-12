@@ -37,4 +37,6 @@ en:
     follows:
       follow_user:
         cannot_follow_self: "You cannot follow yourself"
+        duplicate_follow: "You are already following this user"
+        followee_not_found: "Followee not found"
 
