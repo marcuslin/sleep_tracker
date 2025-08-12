@@ -4,12 +4,12 @@ RSpec.describe Api::V1::FollowsController, type: :controller do
   let(:token) { Auth::JwtService.encode(user_id: user.id) }
   let(:valid_headers) { { 'Authorization' => "Bearer #{token}" } }
 
-  describe 'POST #follow_users' do
+  describe 'POST #creatre' do
     before { request.headers.merge!(valid_headers) }
 
     context 'when following a valid user' do
       it 'returns success response with follow data' do
-        post :follow_users, params: { followee_id: followee.id }
+        post :create, params: { followee_id: followee.id }
 
         expect(response).to have_http_status(:created)
         expect(json_response['success']).to be true
@@ -21,7 +21,7 @@ RSpec.describe Api::V1::FollowsController, type: :controller do
 
     context 'when user not found' do
       it 'returns unprocessable_entity with error' do
-        post :follow_users, params: { followee_id: 99999 }
+        post :create, params: { followee_id: 99999 }
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(json_response['success']).to be false
@@ -31,7 +31,7 @@ RSpec.describe Api::V1::FollowsController, type: :controller do
 
     context 'when trying to follow yourself' do
       it 'returns error response' do
-        post :follow_users, params: { followee_id: user.id }
+        post :create, params: { followee_id: user.id }
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(json_response['success']).to be false
@@ -43,7 +43,7 @@ RSpec.describe Api::V1::FollowsController, type: :controller do
       before { user.follows.create!(followee: followee) }
 
       it 'returns error response' do
-        post :follow_users, params: { followee_id: followee.id }
+        post :create, params: { followee_id: followee.id }
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(json_response['success']).to be false
@@ -52,14 +52,14 @@ RSpec.describe Api::V1::FollowsController, type: :controller do
     end
   end
 
-  describe 'POST #unfollow_users' do
+  describe 'POST #destroy' do
     before { request.headers.merge!(valid_headers) }
 
     context 'when unfollowing a user you follow' do
       before { user.follows.create!(followee: followee) }
 
       it 'returns success response with unfollow data' do
-        post :unfollow_users, params: { followee_id: followee.id }
+        delete :destroy, params: { id: followee.id }
 
         expect(response).to have_http_status(:ok)
         expect(json_response['success']).to be true
@@ -70,7 +70,7 @@ RSpec.describe Api::V1::FollowsController, type: :controller do
 
     context 'when not following the user' do
       it 'returns error response' do
-        post :unfollow_users, params: { followee_id: followee.id }
+        delete :destroy, params: { id: followee.id }
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(json_response['success']).to be false

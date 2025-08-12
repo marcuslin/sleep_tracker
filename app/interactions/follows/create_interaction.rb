@@ -1,4 +1,4 @@
-class Follows::FollowUserInteraction < ActiveInteraction::Base
+class Follows::CreateInteraction < ActiveInteraction::Base
   object :user
   integer :followee_id
 

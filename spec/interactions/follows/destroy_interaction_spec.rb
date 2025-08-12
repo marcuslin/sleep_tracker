@@ -1,4 +1,4 @@
-RSpec.describe Follows::UnfollowUserInteraction do
+RSpec.describe Follows::DestroyInteraction do
   let(:user) { create(:user) }
   let(:followee) { create(:user) }
 
@@ -23,7 +23,7 @@ RSpec.describe Follows::UnfollowUserInteraction do
       it 'adds validation error' do
         interaction = described_class.run(user: user, followee_id: 99999)
         expect(interaction).to be_invalid
-        expect(interaction.errors[:followee_id]).to include('Unfollowee not found')
+        expect(interaction.errors.full_messages).to include('Unfollowee not found')
       end
     end
 
@@ -31,7 +31,7 @@ RSpec.describe Follows::UnfollowUserInteraction do
       it 'adds validation error' do
         interaction = described_class.run(user: user, followee_id: followee.id)
         expect(interaction).to be_invalid
-        expect(interaction.errors[:followee_id]).to include('You are not following this user')
+        expect(interaction.errors.full_messages).to include('You are not following this user')
       end
     end
   end

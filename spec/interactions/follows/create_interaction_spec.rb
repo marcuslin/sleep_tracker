@@ -1,4 +1,4 @@
-RSpec.describe Follows::FollowUserInteraction do
+RSpec.describe Follows::CreateInteraction do
   let(:user) { create(:user) }
   let(:followee) { create(:user) }
 

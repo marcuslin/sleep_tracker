@@ -1,6 +1,6 @@
 class Api::V1::FollowsController < ApplicationController
-  def follow_users
-    interaction = Follows::FollowUserInteraction.run(
+  def create
+    interaction = Follows::CreateInteraction.run(
       user: current_user,
       followee_id: params[:followee_id]
     )
@@ -22,10 +22,10 @@ class Api::V1::FollowsController < ApplicationController
     end
   end
 
-  def unfollow_users
-    interaction = Follows::UnfollowUserInteraction.run(
+  def destroy
+    interaction = Follows::DestroyInteraction.run(
       user: current_user,
-      followee_id: params[:followee_id]
+      followee_id: params[:id]
     )
 
     if interaction.valid?

@@ -10,8 +10,7 @@ Rails.application.routes.draw do
       post "sleep_records/clock_out", to: "sleep_records#clock_out"
 
       # follows
-      post "follows/follow_users", to: "follows#follow_users"
-      post "follows/unfollow_users", to: "follows#unfollow_users"
+      resources :follows, only: [:create, :destroy]
     end
   end
 end
