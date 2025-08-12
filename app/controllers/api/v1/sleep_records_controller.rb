@@ -12,7 +12,7 @@ class Api::V1::SleepRecordsController < ApplicationController
 
     render json: {
       success: true,
-      data: result[:records],
+      data: serialize(result[:records]),
       meta: {
         next_cursor: result[:next_cursor]
       }
@@ -26,10 +26,8 @@ class Api::V1::SleepRecordsController < ApplicationController
       render json: {
         success: true,
         data: {
-          new_record: interaction.result,
-          sleep_records: current_user.sleep_records
-                        .order(created_at: :desc)
-                        .limit(ENV.fetch("SLEEP_RECORDS_LIMIT", 50).to_i)
+          new_record: serialize(interaction.result).first,
+          sleep_records: serialize(recent_sleep_records)
         }
       }, status: :created
     else
@@ -49,7 +47,7 @@ class Api::V1::SleepRecordsController < ApplicationController
       render json: {
         success: true,
         data: {
-          sleep_record: interaction.result
+          sleep_record: serialize(interaction.result).first
         }
       }, status: :ok
     else
@@ -88,6 +86,12 @@ class Api::V1::SleepRecordsController < ApplicationController
 
   private
 
+  def recent_sleep_records
+    current_user.sleep_records
+                .order(created_at: :desc)
+                .limit(ENV.fetch("SLEEP_RECORDS_LIMIT", 50).to_i)
+  end
+
   def last_week_range
     last_week_start = Date.current.beginning_of_week.prev_week
     last_week_end = last_week_start.end_of_week
@@ -96,6 +100,6 @@ class Api::V1::SleepRecordsController < ApplicationController
   end
 
   def serialize(sleep_records)
-    sleep_records.map { |record| SleepRecordSerializer.serialize(record) }
+    Array(sleep_records).map { |record| SleepRecordSerializer.serialize(record) }
   end
 end
