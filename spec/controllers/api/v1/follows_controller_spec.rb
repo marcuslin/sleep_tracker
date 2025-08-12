@@ -51,4 +51,31 @@ RSpec.describe Api::V1::FollowsController, type: :controller do
       end
     end
   end
+
+  describe 'POST #unfollow_users' do
+    before { request.headers.merge!(valid_headers) }
+
+    context 'when unfollowing a user you follow' do
+      before { user.follows.create!(followee: followee) }
+
+      it 'returns success response with unfollow data' do
+        post :unfollow_users, params: { followee_id: followee.id }
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response['success']).to be true
+        expect(json_response['data']['message']).to eq('Successfully unfollowed user')
+        expect(json_response['data']['unfollow']).to be_present
+      end
+    end
+
+    context 'when not following the user' do
+      it 'returns error response' do
+        post :unfollow_users, params: { followee_id: followee.id }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json_response['success']).to be false
+        expect(json_response['error']['message']).to include('not following')
+      end
+    end
+  end
 end

@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
       # follows
       post "follows/follow_users", to: "follows#follow_users"
+      post "follows/unfollow_users", to: "follows#unfollow_users"
     end
   end
 end

@@ -28,6 +28,8 @@
 #       enabled: "ON"
 
 en:
+  follows:
+    successfully_unfollow: "Successfully unfollowed user"
   interactions:
     sleep_records:
       clock_in:
@@ -39,4 +41,7 @@ en:
         cannot_follow_self: "You cannot follow yourself"
         duplicate_follow: "You are already following this user"
         followee_not_found: "Followee not found"
+      unfollow_user:
+        unfollowee_not_found: "Unfollowee not found" 
+        not_following: "You are not following this user"
 
