@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe Api::V1::SleepRecordsController, type: :controller do
   let(:user) { create(:user) }
   let(:token) { Auth::JwtService.encode(user_id: user.id) }
@@ -43,6 +41,7 @@ RSpec.describe Api::V1::SleepRecordsController, type: :controller do
       end
     end
   end
+
   describe 'POST #clock_in' do
     before { request.headers.merge!(valid_headers) }
 
@@ -171,6 +170,60 @@ RSpec.describe Api::V1::SleepRecordsController, type: :controller do
         expect {
           post :clock_out
         }.to change { sleep_record.reload.status }.from('sleeping').to('awake')
+      end
+    end
+  end
+
+  describe 'GET #friends_weekly' do
+    before { request.headers.merge!(valid_headers) }
+
+    let(:friend1) { create(:user) }
+    let(:friend2) { create(:user) }
+    let(:non_friend) { create(:user) }
+
+    before do
+      # Follow some users
+      user.follows.create!(followee: friend1)
+      user.follows.create!(followee: friend2)
+    end
+
+    context 'when friends have sleep records from last week' do
+      before do
+        # Create records in last week range
+        last_week = Date.current.beginning_of_week.prev_week
+
+        create(:sleep_record, user: friend1, duration: 8.5, created_at: last_week + 1.day, status: :awake)
+        create(:sleep_record, user: friend2, duration: 7.2, created_at: last_week + 2.days, status: :awake)
+        create(:sleep_record, user: non_friend, duration: 9.0, created_at: last_week + 1.day, status: :awake)
+      end
+
+      it 'returns friends sleep records sorted by duration desc' do
+        get :friends_weekly
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response['success']).to be true
+        expect(json_response['data'].size).to eq(2)
+
+        # Check sorting (longest first)
+        durations = json_response['data'].map { |r| r['duration'] }
+        expect(durations).to eq([ 8.5, 7.2 ])
+      end
+
+      it 'excludes non-friends records' do
+        get :friends_weekly
+
+        user_ids = json_response['data'].map { |r| r['user_id'] }
+        expect(user_ids).not_to include(non_friend.id)
+      end
+    end
+
+    context 'when no friends or no records' do
+      it 'returns empty array' do
+        get :friends_weekly
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response['success']).to be true
+        expect(json_response['data']).to eq([])
       end
     end
   end
