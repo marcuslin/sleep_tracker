@@ -1,6 +1,6 @@
 class Rack::Attack
-  throttle('all_api_requests/ip', limit: 300, period: 5.minutes) do |req|
-    if req.path.start_with?('/api/')
+  throttle("all_api_requests/ip", limit: 300, period: 5.minutes) do |req|
+    if req.path.start_with?("/api/")
       req.ip
     end
   end

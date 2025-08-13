@@ -19,7 +19,7 @@ end
 puts "Creating follow relationships between regular users..."
 # Regular users follow each other randomly
 users.each do |user|
-  followers = users.sample(rand(3..8)) - [user]
+  followers = users.sample(rand(3..8)) - [ user ]
   followers.each do |followee|
     user.follows.find_or_create_by(followee: followee)
   end
