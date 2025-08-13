@@ -1,8 +1,12 @@
 require 'spec_helper'
+
+require 'simplecov'
+SimpleCov.start 'rails'
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
+require 'shoulda/matchers'
 
 # Add FactoryBot and Shoulda Matchers
 require 'factory_bot_rails'

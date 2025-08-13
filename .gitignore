@@ -39,3 +39,6 @@
 # Ignore all database configurations (keep only example)
 /config/database.yml
 /config/database.production.yml
+
+# Ignore test coverage reports
+/coverage/
