@@ -18,7 +18,7 @@ class Api::V1::FollowsController < ApplicationController
         error: {
           message: interaction.errors.full_messages.join(", ")
         }
-      }, status: :unprocessable_entity
+      }, status: :unprocessable_content
     end
   end
 
@@ -42,7 +42,7 @@ class Api::V1::FollowsController < ApplicationController
         error: {
           message: interaction.errors.full_messages.join(", ")
         }
-      }, status: :unprocessable_entity
+      }, status: :unprocessable_content
     end
   end
 end
