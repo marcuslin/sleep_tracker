@@ -15,8 +15,8 @@ RSpec.configure do |config|
       paths: {},
       servers: [
         {
-          url: 'http://localhost:3000',
-          description: 'Development server'
+          url: 'http://test.host',
+          description: 'Test server'
         }
       ],
       components: {
