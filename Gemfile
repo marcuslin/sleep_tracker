@@ -61,6 +61,8 @@ group :development do
 
   # Performance monitoring
   gem "bullet"
+
+  gem "rswag-ui"
 end
 
 group :test do
@@ -68,4 +70,7 @@ group :test do
   gem "factory_bot_rails"
   gem "shoulda-matchers"
   gem "simplecov", require: false
+  gem "rswag-specs"
 end
+
+gem "rswag-api"

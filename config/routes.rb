@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  if defined?(Rswag::Ui) && defined?(Rswag::Api)
+    mount Rswag::Ui::Engine => "/api-docs"
+    mount Rswag::Api::Engine => "/api-docs"
+  end
   namespace :api do
     namespace :v1 do
       post "auth/login", to: "auth#login"
